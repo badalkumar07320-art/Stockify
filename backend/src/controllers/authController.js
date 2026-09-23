@@ -188,6 +188,7 @@ export const resetPasswordWithOldPassword = asyncHandler(async (req, res) => {
   }
 
   user.password = newPassword;
+  user.passwordChangedAt = new Date();
   await user.save();
 
   return sendSuccess(res, 200, {
