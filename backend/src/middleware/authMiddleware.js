@@ -16,10 +16,16 @@ export const protect = asyncHandler(async (req, _res, next) => {
     const token = authHeader.split(" ")[1];
     const decoded = jwt.verify(token, env.jwtSecret);
 
-    req.user = await User.findById(decoded.id);
+    req.user = await User.findById(decoded.id).select("+passwordChangedAt");
 
     if (!req.user) {
       const error = new Error("Your session is invalid. Please login again.");
+      error.statusCode = 401;
+      throw error;
+    }
+
+    if (req.user.passwordChangedAt && decoded.iat * 1000 < new Date(req.user.passwordChangedAt).getTime()) {
+      const error = new Error("Your password was changed. Please login again.");
       error.statusCode = 401;
       throw error;
     }
