@@ -1,7 +1,7 @@
 import { Eye, EyeOff, KeyRound, Mail } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../api/axios.js";
+import api from "../api/axiosInstance.js";
 
 const ForgotPassword = () => {
   const [form, setForm] = useState({ email: "", currentPassword: "", newPassword: "", confirmPassword: "" });
