@@ -1,514 +1,627 @@
 # Stockify
 
-<p align="center">
-  <img src="frontend/public/favicon.svg" alt="Stockify Logo" width="88" />
-</p>
+> Smart Retail Billing & Inventory Management System built as a MERN-style full-stack application.
 
-<h1 align="center">Stockify</h1>
+Stockify is a retail management application for handling products, inventory, billing, customers, suppliers, users and business reports from one web interface.
 
-<p align="center">
-  <strong>Smart Retail Billing & Inventory Management System</strong>
-</p>
+This README is the current project reference for future development. It describes what is implemented in the repository now and separates completed functionality from planned enhancements.
 
-<p align="center">
-  A full-stack MERN application for managing products, inventory, billing, customers, suppliers, users, and business analytics from one modern dashboard.
-</p>
+## Current Status
 
-<p align="center">
-  <a href="https://github.com/badalkumar07320-art/Stockify">Repository</a>
-  ·
-  <a href="https://github.com/badalkumar07320-art/Stockify/issues">Issues</a>
-</p>
+**Current architecture:** React + Vite frontend, Node.js + Express backend, MongoDB + Mongoose database.
 
----
+**Repository:** `badalkumar07320-art/Stockify`
 
-## Overview
+**Default branch:** `main`
 
-**Stockify** is a production-oriented retail management application designed to bring day-to-day store operations into a single digital workspace.
+### Implemented today
 
-It combines a React-based dashboard with a Node.js/Express REST API and MongoDB database to provide inventory control, billing, customer and supplier management, authentication, administrative controls, and business reporting.
-
-The project is structured as a separate **frontend + backend** application and includes a Render Blueprint configuration for deployment.
-
-## Core Capabilities
-
-### 📦 Inventory Management
-- Create, view, update, and delete products
-- Track stock quantities and pricing
-- Increase or decrease stock
-- Product detail views
-- Low-stock monitoring
-- Out-of-stock monitoring
-- Stock-aware billing validation
-
-### 🧾 Billing & Invoicing
-- Create retail bills from the application
-- Validate available stock before billing
-- Generate invoice numbers automatically
-- View invoice details
-- Printable invoice experience
-- Track payment-related sales information
-- Automatically reflect sold quantities in inventory
-
-### 👥 Customer Management
-- Add and manage customers
-- View customer details
-- Update customer records
-- Delete customer records
-- Connect customer information with retail operations
-
-### 🚚 Supplier Management
-- Add and manage suppliers
-- View supplier records
-- Update supplier information
-- Delete supplier records
-- Maintain supplier-side inventory relationships
-
-### 📊 Dashboard & Reports
-- Business summary metrics
-- Sales chart data
-- Top-selling product analytics
-- Stock alerts
-- Payment-mode reporting
-- Profit calculations
-- Dedicated reports interface
-
-### 🔐 Authentication & Administration
 - User registration and login
-- JWT-based authentication
-- Password hashing with bcryptjs
-- Protected application routes
-- Admin-only routes
+- JWT authentication
+- Protected routes
+- Admin/user role-based access
 - Admin user management
-- User block/unblock controls
-- Profile management
-- Password change flow
-- Forgot-password interface
+- Product catalogue management
+- SKU and optional barcode support
+- Inventory stock increase/decrease/adjustment
+- Stock history/audit trail
+- Low-stock and out-of-stock monitoring
+- Retail billing/POS flow
+- Cash, UPI, Card and Credit payment modes
+- Paid, Pending, Partial and Failed payment statuses
+- Automatic invoice number generation
+- Printable invoice page and browser Save-as-PDF flow
+- Customer management and purchase history
+- Supplier management and inventory product mapping
+- Admin dashboard
+- Sales, profit and inventory analytics
+- Payment-mode sales analytics
+- Top-selling product analytics
+- Search, pagination and filtering in major modules
+- Basic security middleware: Helmet, CORS allow-list and rate limiting
+- Centralized API error handling
+- Render deployment configuration
 
-### 🎨 Modern Frontend Experience
-- Responsive React dashboard
-- Bootstrap-based UI
-- Dark/light theme support
-- Reusable components
-- Toast notifications
-- Confirmation modals
-- Pagination
-- Stock status badges
-- Protected and admin route guards
-- Charts powered by Recharts
-- Icons powered by Lucide React
+## Technology Stack
 
-### 🛡️ Backend Security & Reliability
-- Helmet security headers
-- API rate limiting
-- Configurable CORS
-- Centralized error handling
-- Environment-based configuration
-- Async request handling
-- Structured API responses
-- JWT token generation and verification
+### Frontend
 
----
+- React 18
+- Vite
+- React Router
+- Axios
+- Bootstrap 5
+- Lucide React
+- Recharts
+- Custom CSS
 
-## Tech Stack
+### Backend
 
-| Layer | Technology |
-|---|---|
-| Frontend | React 18, Vite |
-| UI | Bootstrap 5, Custom CSS |
-| Routing | React Router |
-| HTTP Client | Axios |
-| Charts | Recharts |
-| Icons | Lucide React |
-| Backend | Node.js, Express.js |
-| Database | MongoDB, Mongoose |
-| Authentication | JWT |
-| Password Security | bcryptjs |
-| Security | Helmet, express-rate-limit, CORS |
-| Deployment | Render |
-| Architecture | MERN / REST API |
+- Node.js
+- Express 4
+- Mongoose 8
+- MongoDB
+- JWT
+- bcryptjs
+- Helmet
+- CORS
+- express-rate-limit
+- dotenv
+- Nodemon for development
 
----
+### Deployment
 
-## Architecture
-
-```text
-┌───────────────────────────────┐
-│        Stockify Frontend      │
-│     React + Vite + Bootstrap  │
-│                               │
-│  Dashboard • Billing • Stock  │
-│  Customers • Suppliers •      │
-│  Products • Reports • Admin   │
-└───────────────┬───────────────┘
-                │
-                │ Axios / REST API
-                ▼
-┌───────────────────────────────┐
-│        Stockify Backend       │
-│      Node.js + Express.js     │
-│                               │
-│ Controllers • Routes • Auth    │
-│ Middleware • Business Logic   │
-└───────────────┬───────────────┘
-                │
-                │ Mongoose
-                ▼
-┌───────────────────────────────┐
-│          MongoDB              │
-│                               │
-│ Users • Products • Bills      │
-│ Customers • Suppliers         │
-└───────────────────────────────┘
-```
-
----
+- Render configuration is present in `render.yaml`
+- Backend is configured as a Node web service
+- Frontend is configured as a Render static site
+- MongoDB is expected through `MONGO_URI`
 
 ## Project Structure
 
-```text
+```
 Stockify/
 ├── backend/
 │   ├── src/
 │   │   ├── config/
-│   │   │   ├── db.js
-│   │   │   └── env.js
 │   │   ├── controllers/
-│   │   │   ├── adminUserController.js
-│   │   │   ├── authController.js
-│   │   │   ├── billController.js
-│   │   │   ├── customerController.js
-│   │   │   ├── dashboardController.js
-│   │   │   ├── productController.js
-│   │   │   └── supplierController.js
 │   │   ├── middleware/
-│   │   │   ├── authMiddleware.js
-│   │   │   └── errorMiddleware.js
 │   │   ├── models/
-│   │   │   ├── Bill.js
-│   │   │   ├── Customer.js
-│   │   │   ├── Product.js
-│   │   │   ├── Supplier.js
-│   │   │   └── User.js
 │   │   ├── routes/
-│   │   │   ├── adminUserRoutes.js
-│   │   │   ├── authRoutes.js
-│   │   │   ├── billRoutes.js
-│   │   │   ├── customerRoutes.js
-│   │   │   ├── dashboardRoutes.js
-│   │   │   ├── productRoutes.js
-│   │   │   └── supplierRoutes.js
 │   │   ├── scripts/
-│   │   │   └── seedAdmin.js
 │   │   ├── utils/
-│   │   │   ├── apiResponse.js
-│   │   │   ├── asyncHandler.js
-│   │   │   ├── ensureAdmin.js
-│   │   │   ├── generateInvoiceNo.js
-│   │   │   ├── generateToken.js
-│   │   │   └── logger.js
 │   │   ├── app.js
 │   │   └── server.js
 │   ├── .env.example
-│   ├── .gitignore
-│   ├── package.json
-│   └── package-lock.json
-│
+│   └── package.json
 ├── frontend/
 │   ├── public/
-│   │   └── favicon.svg
 │   ├── src/
 │   │   ├── api/
 │   │   ├── components/
-│   │   │   ├── common/
-│   │   │   ├── layout/
-│   │   │   └── routes/
 │   │   ├── context/
 │   │   ├── pages/
 │   │   ├── styles/
-│   │   ├── utils/
-│   │   ├── App.jsx
-│   │   └── main.jsx
+│   │   └── utils/
 │   ├── .env.example
-│   ├── index.html
-│   ├── package.json
-│   ├── package-lock.json
-│   └── vite.config.js
-│
-├── render.yaml
-├── .gitignore
-└── README.md
+│   └── package.json
+└── render.yaml
 ```
 
----
+## Authentication & Authorization
 
-## REST API
+Stockify currently uses JWT bearer-token authentication.
 
-The backend exposes REST endpoints grouped by application domain.
+### User features
+
+- Register
+- Login
+- Fetch current profile
+- Update profile
+- Change password
+- Logout by clearing the client-side session
+
+Passwords are hashed with bcrypt before storage.
+
+The frontend stores the JWT and basic user information in localStorage.
+
+### Roles
+
+There are two roles:
+
+- `user`
+- `admin`
+
+Admin-only backend operations are protected by `adminOnly` middleware.
+
+Admins can currently:
+
+- View/search users
+- Change user roles
+- Block/unblock users
+- Access admin dashboard
+- Manage products
+- Manage inventory
+- Manage customers
+- Manage suppliers
+- View reports
+
+A user cannot remove their own admin role or block their own account.
+
+## Product Management
+
+The product system currently supports:
+
+- Product name
+- SKU
+- Optional barcode
+- Category
+- Brand
+- Purchase price
+- Selling price
+- MRP
+- Current stock
+- Low-stock limit
+- Unit
+- Expiry date
+- Supplier name
+- Product image URL
+- Active/inactive state
+- Creator information
+- Stock history
+
+Validation currently prevents:
+
+- Negative monetary/stock values
+- Selling price below purchase price
+- Selling price above MRP
+- Duplicate SKU
+- Duplicate barcode where provided
+
+Products can be searched and filtered by:
+
+- Name
+- SKU
+- Barcode
+- Category
+- Active state
+- Available/low/out-of-stock status
+
+Pagination is implemented.
+
+## Inventory Management
+
+Inventory supports three stock operations:
+
+1. Increase
+2. Decrease
+3. Adjustment
+
+Every stock movement can record:
+
+- Movement type
+- Quantity
+- Previous stock
+- New stock
+- Note
+- User who performed the movement
+- Timestamp
+
+Stock cannot become negative.
+
+The system also exposes:
+
+- Low-stock products
+- Out-of-stock products
+- Stock alert counts
+
+## Billing / POS
+
+The billing module works with the product inventory.
+
+A bill can contain multiple products and stores:
+
+- Invoice number
+- Customer snapshot
+- Product snapshot
+- Quantity
+- Selling price
+- Item discount
+- Item tax
+- Subtotal
+- Total discount
+- Total tax
+- Grand total
+- Payment mode
+- Payment status
+- User/cashier
+- Creation time
+
+Supported payment modes:
+
+- Cash
+- UPI
+- Card
+- Credit
+
+Supported payment statuses:
+
+- Paid
+- Pending
+- Partial
+- Failed
+
+When a bill is created:
+
+- Product availability is checked
+- Requested quantity is validated
+- Product stock is reduced
+- Stock history records the sale
+- Invoice number is generated
+- Bill data is stored
+- Customer purchase history can be returned
+
+Invoice numbers currently follow the pattern:
+
+`STK-YYYYMMDD-00001`
+
+The frontend provides:
+
+- Invoice detail page
+- Print action
+- Browser print-dialog PDF workflow
+- Customer details
+- Cashier details
+- Item table
+- Totals
+- Payment information
+
+## Customers
+
+Customer records currently contain:
+
+- Name
+- Mobile
+- Email
+- Address
+- Total purchases
+- Total spent
+- Last purchase date
+
+Features include:
+
+- Add customer
+- Search customer
+- View customer details
+- Edit customer
+- Delete customer
+- Purchase history
+- Pagination
+
+Mobile number is unique.
+
+Customer purchase statistics are synchronized from bill history when customer records are read/updated.
+
+## Suppliers
+
+Supplier records currently contain:
+
+- Name
+- Phone
+- Email
+- Company name
+- Address
+- GST number
+- Supplied products
+- Total purchase value
+
+Features include:
+
+- Add supplier
+- Search supplier
+- View supplier details
+- Edit supplier
+- Delete supplier
+- Product mapping
+- Inventory purchase-value calculation
+- Pagination
+
+Supplier phone number is unique.
+
+Product-to-supplier mapping currently uses the product's `supplierName` field and supplier/company names.
+
+## Dashboard & Reports
+
+Admin dashboard currently provides:
+
+- Total products
+- Total customers
+- Total suppliers
+- Total invoices
+- Today's sales
+- Monthly revenue
+- Monthly profit
+- Monthly purchase value
+- Monthly sales value
+- Monthly discount
+- Monthly tax
+- Low-stock count
+- Out-of-stock count
+- Recent bills
+- Category-wise stock
+- Payment-mode-wise sales
+- Top-selling products
+
+Reports currently provide:
+
+- Date range filters
+- Payment mode filter
+- Daily sales
+- Monthly sales
+- Filtered sales
+- Revenue/profit line chart
+- Payment-mode pie chart
+- Top-products bar chart
+- Filtered bill list
+
+Sales charts can be requested by year.
+
+## Frontend Pages Currently Present
 
 ### Authentication
-```text
-POST   /api/auth/register
-POST   /api/auth/login
-GET    /api/auth/me
-PUT    /api/auth/profile
-PUT    /api/auth/change-password
-```
 
-### Admin
-```text
-PUT    /api/admin/users/:id/block
-```
+- Login
+- Register
+- Forgot Password UI placeholder
 
-### Products & Inventory
-```text
-POST   /api/products
-GET    /api/products
-GET    /api/products/:id
-PUT    /api/products/:id
-DELETE /api/products/:id
-PATCH  /api/products/:id/stock
-GET    /api/products/low-stock
-GET    /api/products/out-of-stock
-```
+### Main application
 
-### Billing
-```text
-POST   /api/bills
-GET    /api/bills
-GET    /api/bills/:id
-DELETE /api/bills/:id
-GET    /api/bills/invoice/:invoiceNo
-```
+- Dashboard
+- Billing
+- Invoice
+- Products
+- Product details
+- Product add/edit form
+- Customers
+- Customer details
+- Inventory
+- Low Stock
+- Suppliers
+- Reports
+- Admin Panel
+- Settings placeholder
+- Not Found page
 
-### Customers
-```text
-POST   /api/customers
-GET    /api/customers
-GET    /api/customers/:id
-PUT    /api/customers/:id
-DELETE /api/customers/:id
-```
+Protected and admin route guards are implemented.
 
-### Suppliers
-```text
-POST   /api/suppliers
-GET    /api/suppliers
-GET    /api/suppliers/:id
-PUT    /api/suppliers/:id
-DELETE /api/suppliers/:id
-```
+## Backend API Areas
 
-### Dashboard
-```text
-GET    /api/dashboard/summary
-GET    /api/dashboard/sales-chart
-GET    /api/dashboard/top-products
-GET    /api/dashboard/stock-alerts
-```
+The backend currently exposes these API groups:
 
----
+- `/api/health`
+- `/api/auth`
+- `/api/admin`
+- `/api/products`
+- `/api/bills`
+- `/api/customers`
+- `/api/suppliers`
+- `/api/dashboard`
 
-## Getting Started
+The API uses centralized error handling and consistent authentication middleware.
 
-### Prerequisites
+## Security Already Present
 
-Install the following before running Stockify locally:
+Current backend security-related measures include:
 
-- Node.js
-- npm
-- MongoDB / MongoDB Atlas
-- Git
+- JWT authentication
+- bcrypt password hashing
+- Helmet
+- CORS origin allow-list
+- Express rate limiting
+- Protected routes
+- Admin authorization middleware
+- Password exclusion from normal user queries
+- Input validation in major controllers
+- Environment variables for secrets/configuration
 
-### 1. Clone the Repository
+## Current Limitations / Known Gaps
 
-```bash
-git clone https://github.com/badalkumar07320-art/Stockify.git
-cd Stockify
-```
+These are important because they should not be treated as completed features.
 
-### 2. Configure the Backend
+### 1. Forgot-password flow is not implemented
 
-```bash
-cd backend
-npm install
-cp .env.example .env
-```
+The frontend contains a Forgot Password page, but it is currently a UI placeholder. There is no complete email-based reset-token workflow.
 
-Configure your backend environment variables:
+### 2. Invoice PDF is browser-based
 
-```env
-NODE_ENV=development
-PORT=5000
-MONGO_URI=<your-mongodb-connection-string>
-JWT_SECRET=<your-long-random-secret>
-JWT_EXPIRES_IN=7d
-CLIENT_URL=http://localhost:5173
-CLIENT_URLS=http://localhost:5173
-```
+The current Download PDF action opens the browser print flow and relies on the user selecting Save as PDF. There is no dedicated server-side PDF generation service.
 
-Optional admin configuration:
+### 3. Supplier purchasing is not a full purchase-management system
 
-```env
-ADMIN_NAME=Stockify Admin
-ADMIN_EMAIL=<your-admin-email>
-ADMIN_PASSWORD=<your-admin-password>
-ADMIN_PHONE=<your-admin-phone>
-```
+Supplier records and product mapping exist, but there is no complete purchase-order / goods-receiving workflow that automatically increases stock and records purchase transactions.
 
-Start the backend:
+### 4. Barcode scanning is not implemented
 
-```bash
-npm run dev
-```
+A barcode field exists, but there is no camera scanner or dedicated barcode-reader workflow.
 
-For production-style execution:
+### 5. Payment integration is not implemented
 
-```bash
-npm start
-```
+UPI/Card are currently payment modes recorded in bills. There is no Razorpay/Stripe or bank/payment-gateway transaction integration.
 
-### 3. Configure the Frontend
+### 6. Notifications are not implemented
 
-Open a new terminal:
+There is no email, SMS, WhatsApp or push notification system for low stock, invoices or password recovery.
 
-```bash
-cd frontend
-npm install
-cp .env.example .env
-```
+### 7. Settings page is a placeholder
 
-Set the API URL:
+A Settings route exists, but a complete store/profile/settings management module is still future work.
 
-```env
-VITE_API_URL=http://localhost:5000/api
-```
+### 8. No automated test suite is currently part of the repository
 
-Start the frontend:
+Unit, integration and end-to-end testing should be added as the project grows.
 
-```bash
-npm run dev
-```
+### 9. Billing stock updates are not transactional
 
-The Vite development server normally runs on:
+Bill creation and subsequent product saves are separate database operations. A future version should use MongoDB transactions so a partial failure cannot leave billing and inventory inconsistent.
 
-```text
-http://localhost:5173
-```
+### 10. Some analytics are calculated from current product purchase prices
 
----
+Historical profit can change if a product's purchase price is edited later, because analytics look up the current product purchase price. A production-grade accounting model should snapshot cost price inside each bill item.
 
-## Admin Setup
+## Recommended Future Roadmap
 
-Stockify includes an admin seed script.
+Future development should be incremental. Do not implement everything at once.
 
-Configure the admin environment variables in `backend/.env`, then run:
+### Phase 1 — Stability & correctness
 
-```bash
-cd backend
-npm run seed:admin
-```
+- Fix and verify all current runtime issues
+- Add request validation with a dedicated validation library
+- Add automated API tests
+- Add frontend error/loading/empty states consistently
+- Add MongoDB transactions for billing + stock changes
+- Improve pagination/filtering consistency
+- Add database indexes based on actual query patterns
+- Improve logging and production error monitoring
+- Add API documentation
 
-The application also contains admin-provisioning support through the backend configuration.
+### Phase 2 — Authentication & security
 
-**Never commit real admin credentials, JWT secrets, or MongoDB credentials to GitHub.**
+- Complete forgot-password flow
+- Email verification
+- Refresh-token/session strategy
+- Password reset tokens with expiry
+- Stronger password policy
+- Login attempt protection
+- Audit logs for sensitive admin actions
+- Better session/device management
 
----
+### Phase 3 — Retail operations
+
+- Barcode scanner
+- Barcode label generation/printing
+- Purchase orders
+- Goods receiving
+- Supplier purchase history
+- Automatic stock receiving
+- Stock transfer between locations
+- Stock adjustment reasons
+- Expiry alerts
+- Batch/lot tracking
+- Returns and refunds
+- Damaged/expired stock handling
+
+### Phase 4 — Billing improvements
+
+- Tax/GST configuration
+- Store-specific invoice details
+- Invoice templates
+- Real PDF generation
+- Thermal receipt format
+- Invoice reprint
+- Bill cancellation/void flow
+- Returns/refunds linked to original invoices
+- Credit/customer outstanding balance
+- Payment collection history
+
+### Phase 5 — Analytics
+
+- Custom date-range analytics
+- Gross margin reports
+- Category performance
+- Supplier performance
+- Inventory valuation
+- Dead-stock analysis
+- Fast-moving/slow-moving products
+- Customer lifetime value
+- Outstanding credit report
+- Export reports to CSV/Excel/PDF
+
+### Phase 6 — Notifications & integrations
+
+- Email invoices
+- Low-stock email alerts
+- WhatsApp invoice sharing
+- SMS notifications
+- Payment gateway integration
+- Cloud file/image storage
+- Scheduled reports
+- Webhooks/API integrations
+
+### Phase 7 — Production architecture
+
+- Docker support
+- CI/CD with GitHub Actions
+- Separate development/staging/production environments
+- Centralized secrets management
+- Monitoring and alerting
+- Structured logs
+- Database backup strategy
+- API versioning
+- Rate limits per endpoint/user
+- Caching where useful
+- Background job/queue system
+
+### Phase 8 — Multi-store / SaaS direction
+
+If Stockify is eventually turned into a real multi-business product:
+
+- Store/organization model
+- Multi-tenant data isolation
+- Multiple branches
+- Branch-level inventory
+- Branch-level users and permissions
+- Owner/manager/cashier roles
+- Subscription plans
+- Usage limits
+- Billing/subscription management
+- Tenant-level settings
+- Audit logs
+- Advanced RBAC
+
+## Suggested Long-Term Architecture
+
+A mature version can evolve toward:
+
+**Frontend**
+React/Next.js + TypeScript + Tailwind/shadcn-style component system
+
+**Backend**
+Node.js + TypeScript + Express or NestJS
+
+**Database**
+MongoDB initially, with careful transaction/index design. PostgreSQL could be considered later if the product becomes heavily relational/accounting-focused.
+
+**Infrastructure**
+Vercel/Render/Railway + managed MongoDB/PostgreSQL + object storage
+
+**Supporting services**
+Email provider + payment gateway + background jobs + monitoring + analytics
+
+The current project does not need to migrate to this architecture immediately. Improvements should be driven by actual requirements.
 
 ## Environment Variables
 
 ### Backend
 
-| Variable | Purpose |
-|---|---|
-| `NODE_ENV` | Application environment |
-| `PORT` | Backend server port |
-| `MONGO_URI` | MongoDB connection string |
-| `JWT_SECRET` | JWT signing secret |
-| `JWT_EXPIRES_IN` | JWT expiration period |
-| `CLIENT_URL` | Primary frontend origin |
-| `CLIENT_URLS` | Allowed frontend origins |
-| `ADMIN_NAME` | Admin account name |
-| `ADMIN_EMAIL` | Admin account email |
-| `ADMIN_PASSWORD` | Admin account password |
-| `ADMIN_PHONE` | Admin account phone |
+The repository expects environment configuration such as:
+
+- `PORT`
+- `MONGO_URI`
+- `JWT_SECRET`
+- `JWT_EXPIRES_IN`
+- `CLIENT_URL`
+- `CLIENT_URLS`
+- `ADMIN_NAME`
+- `ADMIN_EMAIL`
+- `ADMIN_PASSWORD`
+- `ADMIN_PHONE`
 
 ### Frontend
 
-| Variable | Purpose |
-|---|---|
-| `VITE_API_URL` | Backend API base URL |
+- `VITE_API_URL`
 
-Example:
+Secrets should never be committed to GitHub.
 
-```env
-VITE_API_URL=https://your-backend.onrender.com/api
-```
-
----
-
-## Deployment with Render
-
-The repository includes a `render.yaml` Blueprint configuration for both services.
-
-### Backend Service
-
-- Runtime: Node
-- Root directory: `backend`
-- Build command: `npm install`
-- Start command: `npm start`
-
-### Frontend Service
-
-- Runtime: Static Site
-- Root directory: `frontend`
-- Build command: `npm install && npm run build`
-- Publish directory: `dist`
-- SPA rewrite: `/* → /index.html`
-
-### Deployment Flow
-
-```text
-MongoDB Atlas
-      │
-      ▼
-Stockify Backend ───────► Render Web Service
-      │
-      │ REST API
-      ▼
-Stockify Frontend ──────► Render Static Site
-```
-
-After deployment:
-
-1. Deploy the backend.
-2. Add MongoDB and JWT environment variables.
-3. Copy the deployed backend URL.
-4. Set frontend `VITE_API_URL` to the backend `/api` URL.
-5. Deploy the frontend.
-6. Configure backend `CLIENT_URL` / `CLIENT_URLS` with the deployed frontend origin.
-7. Verify authentication, billing, inventory, and dashboard flows.
-
----
-
-## Security
-
-Stockify includes several server-side security measures:
-
-- JWT authentication
-- bcryptjs password hashing
-- Protected and admin-only routes
-- Helmet security headers
-- API rate limiting
-- CORS origin configuration
-- Environment-based secrets
-- Centralized error handling
-
-Security-sensitive configuration should remain outside the repository.
-
----
-
-## Development Commands
+## Development
 
 ### Backend
 
@@ -518,9 +631,15 @@ npm install
 npm run dev
 ```
 
+Production:
+
 ```bash
+cd backend
+npm install
 npm start
 ```
+
+Admin seed script:
 
 ```bash
 npm run seed:admin
@@ -534,65 +653,39 @@ npm install
 npm run dev
 ```
 
+Production build:
+
 ```bash
 npm run build
 ```
 
-```bash
-npm run preview
-```
+## Development Rules for Future Changes
+
+This section is intentionally included as a reference for future Stockify development.
+
+1. Always inspect the current repository before changing code.
+2. Do not assume an earlier version of a file is still current.
+3. Preserve existing working functionality unless the requested change intentionally modifies it.
+4. Fix the root cause instead of adding temporary patches when practical.
+5. Keep frontend and backend API contracts synchronized.
+6. Validate important business rules on the backend; frontend validation is only a UX layer.
+7. Never commit secrets, real credentials or private environment files.
+8. For database-changing features, consider migration/backfill/data-integrity impact.
+9. For billing/inventory changes, protect against stock inconsistencies and duplicate operations.
+10. After changes, verify affected files and, where possible, run the relevant build/test checks.
+11. Keep commits focused and use clear commit messages.
+12. Update this README when a major feature, architecture decision or limitation changes.
+
+## Current Project Philosophy
+
+Stockify should grow from a working retail management application into a reliable production-grade system in small, verifiable steps.
+
+The priority order for future development should generally be:
+
+**Correctness → Security → Data integrity → Core retail workflows → Reporting → Integrations → Scale/SaaS**
 
 ---
 
-## Design & Engineering Highlights
+**Last repository inspection:** 23 September 2026
 
-Stockify is organized around clear separation of responsibilities:
-
-- **Routes** define API endpoints.
-- **Controllers** contain request/business logic.
-- **Models** define MongoDB schemas.
-- **Middleware** handles authentication, authorization, errors, and request-level concerns.
-- **Utils** contain reusable backend helpers.
-- **React pages** represent application modules.
-- **Reusable components** keep common UI behavior consistent.
-- **Context providers** manage shared authentication and theme state.
-- **Axios** centralizes frontend API communication.
-- **Render Blueprint** keeps deployment configuration version-controlled.
-
----
-
-## Roadmap
-
-Potential future improvements include:
-
-- Automated testing and CI/CD
-- More granular role and permission management
-- Advanced inventory movement history
-- Barcode/QR-based product workflows
-- Exportable sales and inventory reports
-- More payment integrations
-- Automated notifications
-- Audit logs
-- Enhanced analytics and forecasting
-- Cloud image storage integration
-- Improved observability and monitoring
-
----
-
-## License
-
-This project is released under the **MIT License** as specified by the backend package configuration.
-
----
-
-## Author
-
-**Badal Kumar**
-
-GitHub: [@badalkumar07320-art](https://github.com/badalkumar07320-art)
-
----
-
-<p align="center">
-  Built with React, Node.js, Express, MongoDB, and a focus on practical retail automation.
-</p>
+This README reflects the repository state inspected on the date above. Future changes should update the relevant sections so this document remains a reliable project reference.
