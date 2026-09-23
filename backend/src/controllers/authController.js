@@ -160,3 +160,36 @@ export const changePassword = asyncHandler(async (req, res) => {
     message: "Password changed successfully."
   });
 });
+
+export const resetPasswordWithOldPassword = asyncHandler(async (req, res) => {
+  const { email, currentPassword, newPassword, confirmPassword } = req.body;
+
+  validateRequired({ email, currentPassword, newPassword, confirmPassword });
+
+  if (!emailRegex.test(email)) {
+    throw createError("Please provide a valid email address.");
+  }
+
+  validatePassword(newPassword);
+
+  if (newPassword !== confirmPassword) {
+    throw createError("New password and confirm password do not match.");
+  }
+
+  const user = await User.findOne({ email: email.toLowerCase().trim() }).select("+password");
+
+  if (!user || !(await user.matchPassword(currentPassword))) {
+    throw createError("Invalid email or current password.", 401);
+  }
+
+  if (user.isBlocked) {
+    throw createError("Your account has been blocked. Please contact the administrator.", 403);
+  }
+
+  user.password = newPassword;
+  await user.save();
+
+  return sendSuccess(res, 200, {
+    message: "Password reset successfully. You can now log in with your new password."
+  });
+});
