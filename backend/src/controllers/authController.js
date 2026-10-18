@@ -1,3 +1,4 @@
+import crypto from "node:crypto";
 import User from "../models/User.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { sendSuccess } from "../utils/apiResponse.js";
@@ -189,6 +190,93 @@ export const resetPasswordWithOldPassword = asyncHandler(async (req, res) => {
 
   user.password = newPassword;
   user.passwordChangedAt = new Date();
+  await user.save();
+
+  return sendSuccess(res, 200, {
+    message: "Password reset successfully. You can now log in with your new password."
+  });
+});
+
+
+export const requestEmailPasswordReset = asyncHandler(async (req, res) => {
+  const email = String(req.body.email || "").toLowerCase().trim();
+  validateRequired({ email });
+
+  if (!emailRegex.test(email)) {
+    throw createError("Please provide a valid email address.");
+  }
+
+  const genericMessage = "If an account exists for that email, a password reset link will be sent.";
+  const user = await User.findOne({ email });
+
+  // Keep the response generic so this endpoint does not disclose registered accounts.
+  if (!user || user.isBlocked) {
+    return sendSuccess(res, 200, { message: genericMessage });
+  }
+
+  if (!process.env.RESEND_API_KEY || !process.env.EMAIL_FROM) {
+    throw createError("Email recovery is not configured yet. Use the current-password option or contact the administrator.", 503);
+  }
+
+  const rawToken = crypto.randomBytes(32).toString("hex");
+  user.passwordResetTokenHash = crypto.createHash("sha256").update(rawToken).digest("hex");
+  user.passwordResetExpiresAt = new Date(Date.now() + 15 * 60 * 1000);
+  await user.save({ validateBeforeSave: false });
+
+  const clientUrl = (process.env.CLIENT_URL || "http://localhost:5173").replace(/\/$/, "");
+  const resetUrl = `${clientUrl}/forgot-password?token=${rawToken}`;
+  const emailResponse = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      from: process.env.EMAIL_FROM,
+      to: [user.email],
+      subject: "Reset your Stockify password",
+      text: `We received a request to reset your Stockify password. This link expires in 15 minutes: ${resetUrl}\n\nIf you did not request this, you can ignore this email.`,
+      html: `<p>We received a request to reset your Stockify password.</p><p><a href="${resetUrl}">Reset your password</a></p><p>This link expires in 15 minutes. If you did not request this, you can ignore this email.</p>`
+    })
+  });
+
+  if (!emailResponse.ok) {
+    user.passwordResetTokenHash = undefined;
+    user.passwordResetExpiresAt = undefined;
+    await user.save({ validateBeforeSave: false });
+    throw createError("Could not send the reset email. Please try again later.", 502);
+  }
+
+  return sendSuccess(res, 200, { message: genericMessage });
+});
+
+export const confirmEmailPasswordReset = asyncHandler(async (req, res) => {
+  const { token, newPassword, confirmPassword } = req.body;
+  validateRequired({ token, newPassword, confirmPassword });
+  validatePassword(newPassword);
+
+  if (newPassword !== confirmPassword) {
+    throw createError("New password and confirm password do not match.");
+  }
+
+  const tokenHash = crypto.createHash("sha256").update(String(token)).digest("hex");
+  const user = await User.findOne({
+    passwordResetTokenHash: tokenHash,
+    passwordResetExpiresAt: { $gt: new Date() }
+  }).select("+passwordResetTokenHash +passwordResetExpiresAt +password");
+
+  if (!user) {
+    throw createError("This reset link is invalid or has expired. Please request a new one.", 400);
+  }
+
+  if (user.isBlocked) {
+    throw createError("Your account has been blocked. Please contact the administrator.", 403);
+  }
+
+  user.password = newPassword;
+  user.passwordChangedAt = new Date();
+  user.passwordResetTokenHash = undefined;
+  user.passwordResetExpiresAt = undefined;
   await user.save();
 
   return sendSuccess(res, 200, {
