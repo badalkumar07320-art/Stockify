@@ -371,7 +371,8 @@ Sales charts can be requested by year.
 
 - Login
 - Register
-- Forgot Password UI placeholder
+- Password recovery using current password
+- Email-based password reset links with hashed, single-use tokens and 15-minute expiry (requires Resend configuration)
 
 ### Main application
 
@@ -427,9 +428,9 @@ Current backend security-related measures include:
 
 These are important because they should not be treated as completed features.
 
-### 1. Forgot-password flow is not implemented
+### 1. Email recovery requires provider configuration
 
-The frontend contains a Forgot Password page, but it is currently a UI placeholder. There is no complete email-based reset-token workflow.
+Current-password reset works without an email provider. Email-link recovery uses the Resend email API and requires `RESEND_API_KEY` and `EMAIL_FROM` in the backend environment. The sender domain/address must be permitted by Resend. Reset tokens are hashed in the database and expire after 15 minutes.
 
 ### 2. Invoice PDF is browser-based
 
@@ -488,7 +489,6 @@ Future development should be incremental. Do not implement everything at once.
 - Complete forgot-password flow
 - Email verification
 - Refresh-token/session strategy
-- Password reset tokens with expiry
 - Stronger password policy
 - Login attempt protection
 - Audit logs for sensitive admin actions
@@ -610,6 +610,8 @@ The repository expects environment configuration such as:
 - `JWT_EXPIRES_IN`
 - `CLIENT_URL`
 - `CLIENT_URLS`
+- `RESEND_API_KEY` (required for email reset links)
+- `EMAIL_FROM` (sender address configured in Resend)
 - `ADMIN_NAME`
 - `ADMIN_EMAIL`
 - `ADMIN_PASSWORD`
